@@ -6,12 +6,15 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * User class representing a user in the system.
+ * This class is mapped to a MongoDB document.
+ */
 @Document(collection = "users") // should match the mongoDB collection name
 @Data // lombok annotation to generate getters and setters
 @AllArgsConstructor // lombok annotation to generate constructors
@@ -25,6 +28,6 @@ public class User {
     private String username;
 
     private String password;
-    
+
     private List<ShoppingItem> shoppingItems; // list of shopping items associated with the user
 }

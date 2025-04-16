@@ -16,6 +16,11 @@ import dev.clen678techdemo.api_spring.exceptions.UserConflictException;
 import dev.clen678techdemo.api_spring.exceptions.UserNotFoundException;
 import dev.clen678techdemo.api_spring.repositories.UserRepository;
 
+/**
+ * UserService class handles business logic related to user operations.
+ * It provides methods for creating, retrieving, updating, and deleting users,
+ * as well as logging in users and managing their shopping items.
+ */
 @Service
 public class UserService {
 
@@ -25,13 +30,25 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    // get all users
+    /**
+     * Retrieves a list of all users from the database.
+     * 
+     * @return List<User> containing all users in the database.
+     *         If no users are found, an empty list is returned.
+     */
     public List<User> getAllUsers() {
         
-        return userRepository.findAll(); // returns empty list if no users found
+        return userRepository.findAll();
     }
 
-    // get user by id
+    /**
+     * Retrieves a user by their ID from the database.
+     * 
+     * @param id The MongoDB document ID of the user to retrieve.
+     * @return User object representing the user with the specified ID.
+     *         If the user is not found, a UserNotFoundException is thrown.
+     * @throws UserNotFoundException if the user is not found in the database.
+     */
     public User getUserById( ObjectId id) {
         Optional<User> user = userRepository.findById(id);
 
@@ -42,7 +59,14 @@ public class UserService {
         return user.get();
     }
 
-    // create user
+    /**
+     * Creates a new user in the database.
+     * 
+     * @param user The User object containing the user's details.
+     * @return User object representing the newly created user.
+     *         If the username already exists, a UserConflictException is thrown.
+     * @throws UserConflictException if the username already exists in the database.
+     */
     public User createUser(User user) {
         
         // validate unique username
@@ -62,7 +86,17 @@ public class UserService {
         return newUser; // returns the saved user
     }
 
-    // update user
+    /**
+     * Updates an existing user in the database.
+     * 
+     * @param id The MongoDB document ID of the user to update.
+     * @param user The User object containing the updated user's details.
+     * @return User object representing the updated user.
+     *         If the user is not found, a UserNotFoundException is thrown.
+     *         If the username already exists, a UserConflictException is thrown.
+     * @throws UserNotFoundException if the user is not found in the database.
+     * @throws UserConflictException if the username already exists in the database.
+     */
     public User updateUser(ObjectId id, User user) {
         Optional<User> existingUser = userRepository.findById(id);
 
@@ -94,7 +128,12 @@ public class UserService {
         return updatedUser; // returns the updated user
     }
 
-    // delete user
+    /**
+     * Deletes a user from the database.
+     * 
+     * @param id The MongoDB document ID of the user to delete.
+     * @throws UserNotFoundException if the user is not found in the database.
+     */
     public void deleteUser(ObjectId id) {
         Optional<User> existingUser = userRepository.findById(id);
 
@@ -107,7 +146,16 @@ public class UserService {
         return;
     }
     
-    // login user
+    /**
+     * Logs in a user by validating their username and password.
+     * 
+     * @param loginRequest The LoginRequest object containing the username and password.
+     * @return User object representing the authenticated user.
+     *         If the username is not found, a UserNotFoundException is thrown.
+     *         If the password is invalid, an InvalidLoginDetailsException is thrown.
+     * @throws UserNotFoundException if the user is not found in the database.
+     * @throws InvalidLoginDetailsException if the password is invalid.
+     */
     public User loginUser(LoginRequest loginRequest) {
         Optional<User> user = userRepository.findUserByUsername(loginRequest.getUsername()); // need to implement this method in UserRepository (non-default)
 
