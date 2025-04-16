@@ -1,6 +1,6 @@
 package dev.clen678techdemo.api_spring.domain;
 
-import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor 
 public class ShoppingItem {
     
-    // we dont need @Id annotation because of @DocumentReference in User.java??
-    private ObjectId id; // mongoDB creates a unique identifier for each document of type ObjectId
-
+    @Indexed(unique = true)
     private String name;
 
     private Integer quantity;

@@ -25,7 +25,6 @@ public class User {
     private String username;
 
     private String password;
-
-    @DocumentReference // reference to the shopping items associated with the user
+    
     private List<ShoppingItem> shoppingItems; // list of shopping items associated with the user
 }

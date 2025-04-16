@@ -6,13 +6,8 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import dev.clen678techdemo.api_spring.domain.LoginRequest;
 import dev.clen678techdemo.api_spring.domain.User;
@@ -37,7 +32,7 @@ public class UserService {
     }
 
     // get user by id
-    public User getUserById(@PathVariable ObjectId id) {
+    public User getUserById( ObjectId id) {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
@@ -48,7 +43,7 @@ public class UserService {
     }
 
     // create user
-    public User createUser(@RequestBody User user) {
+    public User createUser(User user) {
         
         // validate unique username
         if (userRepository.findUserByUsername(user.getUsername()).isPresent()) {
@@ -68,7 +63,7 @@ public class UserService {
     }
 
     // update user
-    public User updateUser(@PathVariable ObjectId id, @RequestBody User user) {
+    public User updateUser(ObjectId id, User user) {
         Optional<User> existingUser = userRepository.findById(id);
 
         if (existingUser.isEmpty()) {
@@ -77,8 +72,19 @@ public class UserService {
 
         User updatedUser = existingUser.get();
 
-        // rehash the password
-        if (!passwordEncoder.matches(user.getPassword(), updatedUser.getPassword())) {
+        // update the username
+        if (!user.getUsername().equals(updatedUser.getUsername()) && user.getUsername() != null) {
+            
+            // validate unique username
+            if (userRepository.findUserByUsername(user.getUsername()).isPresent()) {
+                throw new UserConflictException("Username already exists");
+            }
+
+            updatedUser.setUsername(user.getUsername());
+        }
+
+        // update and rehash the password
+        if (!passwordEncoder.matches(user.getPassword(), updatedUser.getPassword()) && user.getPassword() != null) {
             String hashedPassword = passwordEncoder.encode(user.getPassword());
             updatedUser.setPassword(hashedPassword);
         }
@@ -89,7 +95,7 @@ public class UserService {
     }
 
     // delete user
-    public void deleteUser(@PathVariable ObjectId id) {
+    public void deleteUser(ObjectId id) {
         Optional<User> existingUser = userRepository.findById(id);
 
         if (existingUser.isEmpty()) {
@@ -102,7 +108,7 @@ public class UserService {
     }
     
     // login user
-    public User loginUser(@RequestBody LoginRequest loginRequest) {
+    public User loginUser(LoginRequest loginRequest) {
         Optional<User> user = userRepository.findUserByUsername(loginRequest.getUsername()); // need to implement this method in UserRepository (non-default)
 
         if (user.isEmpty()) {
