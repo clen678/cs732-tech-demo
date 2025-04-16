@@ -6,7 +6,7 @@ This is a RESTful api built with Springboot that serves as the backend for a sim
 
 Below are the prerequisites to run and use the application
 
-- Java Development Kit (JDK17) 
+- Java Development Kit (JDK) with Java 17 
 - Maven
 - IDE such as VS Code or IntelliJ IDEA (Reccomended)
 - Postman HTTP client (Reccomended)
